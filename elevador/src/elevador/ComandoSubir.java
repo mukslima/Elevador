@@ -11,6 +11,6 @@ class ComandoSubir implements Comando {
 
     @Override
     public void executar() {
-        elevador.requisitarAndar(andarDestino); // Requisita subir até o andar destino
+        elevador.subir(andarDestino);
     }
 }

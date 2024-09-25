@@ -1,5 +1,5 @@
 package elevador;
 
-interface Observador {
+public interface Observador {
     void atualizar();
 }

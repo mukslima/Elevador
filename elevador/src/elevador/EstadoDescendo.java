@@ -10,5 +10,7 @@ class EstadoDescendo implements Estado {
     @Override
     public void executar() {
         System.out.println("Elevador está descendo.");
+        // A variável 'elevador' agora é usada para informar o andar
+        System.out.println("Andar atual: " + elevador.getAndarAtual());
     }
 }

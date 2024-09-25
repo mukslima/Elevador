@@ -1,5 +1,5 @@
 package elevador;
 
 interface Estado {
-	void executar();
+    void executar();
 }

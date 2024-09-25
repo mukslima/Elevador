@@ -11,6 +11,6 @@ class ComandoDescer implements Comando {
 
     @Override
     public void executar() {
-        elevador.requisitarAndar(andarDestino); // Requisita descer até o andar destino
+        elevador.descer(andarDestino);
     }
 }
