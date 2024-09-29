@@ -9,6 +9,7 @@ class EstadoSubindo implements Estado {
 
     @Override
     public void executar() {
-        System.out.println("Elevador está subindo.");
+        System.out.println("Elevador está subindo...");
     }
 }
+

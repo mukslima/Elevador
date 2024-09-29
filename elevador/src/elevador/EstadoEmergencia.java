@@ -9,6 +9,6 @@ class EstadoEmergencia implements Estado {
 
     @Override
     public void executar() {
-        System.out.println("O elevador está em emergência e não pode operar.");
+        System.out.println("Elevador está em emergência.");
     }
 }

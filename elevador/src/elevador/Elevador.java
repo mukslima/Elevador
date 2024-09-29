@@ -8,14 +8,11 @@ class Elevador {
     private int andarAtual;
     private List<Observador> observadores = new ArrayList<>();
     private int contadorCliques = 0; // Para contar os cliques
-    private final int ANDAR_MIN = 0;
-    private final int ANDAR_MAX = 10;
-    private boolean emManutencao = true; // Para evitar loops de manutenção
-    
 
     public Elevador() {
         this.andarAtual = 0; // Começa no térreo
         this.estado = new EstadoParado(this);
+        this.adicionarObservador(new ObservadorPorta(this)); // Adiciona o observador das portas
     }
 
     // Método para adicionar observadores
@@ -31,48 +28,48 @@ class Elevador {
     }
 
     public void subir(int andarDestino) {
+        if (andarDestino > 10) {
+            System.out.println("Não é possível subir além do 10º andar.");
+            return;
+        }
+
         if (estado instanceof EstadoParado || estado instanceof EstadoDescendo) {
-            if (podeSubir(andarDestino)) {
-                this.estado = new EstadoSubindo(this);
-                System.out.println("O Elevador está subindo para o andar " + andarDestino + ", um momento...");
+            this.estado = new EstadoSubindo(this);
+            System.out.println("O Elevador está subindo para o andar " + andarDestino + ", um momento...");
 
-                while (andarAtual < andarDestino) {
-                    andarAtual++;
-                    System.out.println("Andar atual: " + andarAtual);
-                    notificarObservadores(); // Notifica sempre que muda de andar
-                }
-
-                this.estado = new EstadoParado(this);
-                System.out.println("O elevador chegou ao andar " + andarDestino);
-                fecharPorta();
-                resetarContadorCliques(); // Reseta o contador de cliques após a operação
-            } else {
-                System.out.println("Não é possível subir para o andar " + andarDestino + ". Limite máximo é " + ANDAR_MAX);
+            while (andarAtual < andarDestino) {
+                andarAtual++;
+                System.out.println("Andar atual: " + andarAtual);
+                notificarObservadores(); // Notifica sempre que muda de andar
             }
+
+            this.estado = new EstadoParado(this);
+            System.out.println("O elevador chegou ao andar " + andarDestino);
+            resetarContadorCliques(); // Reseta o contador de cliques após a operação
         } else {
             System.out.println("O elevador não pode subir, pois está em " + estado.getClass().getSimpleName());
         }
     }
 
     public void descer(int andarDestino) {
+        if (andarDestino < 0) {
+            System.out.println("Não é possível descer abaixo do térreo.");
+            return;
+        }
+
         if (estado instanceof EstadoParado || estado instanceof EstadoSubindo) {
-            if (podeDescer(andarDestino)) {
-                this.estado = new EstadoDescendo(this);
-                System.out.println("O Elevador está descendo para o andar " + andarDestino + ", um momento...");
+            this.estado = new EstadoDescendo(this);
+            System.out.println("O Elevador está descendo para o andar " + andarDestino + ", um momento...");
 
-                while (andarAtual > andarDestino) {
-                    andarAtual--;
-                    System.out.println("Andar atual: " + andarAtual);
-                    notificarObservadores(); // Notifica sempre que muda de andar
-                }
-
-                this.estado = new EstadoParado(this);
-                System.out.println("O elevador chegou ao andar " + andarDestino);
-                fecharPorta();
-                resetarContadorCliques(); // Reseta o contador de cliques após a operação
-            } else {
-                System.out.println("Não é possível descer para o andar " + andarDestino + ". Limite mínimo é " + ANDAR_MIN);
+            while (andarAtual > andarDestino) {
+                andarAtual--;
+                System.out.println("Andar atual: " + andarAtual);
+                notificarObservadores(); // Notifica sempre que muda de andar
             }
+
+            this.estado = new EstadoParado(this);
+            System.out.println("O elevador chegou ao andar " + andarDestino);
+            resetarContadorCliques(); // Reseta o contador de cliques após a operação
         } else {
             System.out.println("O elevador não pode descer, pois está em " + estado.getClass().getSimpleName());
         }
@@ -80,6 +77,10 @@ class Elevador {
 
     public int getAndarAtual() {
         return andarAtual;
+    }
+
+    public Estado getEstado() {
+        return estado;
     }
 
     // Método para incrementar o contador de cliques e verificar se aciona emergência
@@ -100,32 +101,29 @@ class Elevador {
     private void aguardarSegundos(int segundos) {
         try {
             for (int i = segundos; i > 0; i--) {
-                System.out.print(i + ",");
+                System.out.println(i);
                 Thread.sleep(1000); // Pausa de 1 segundo
             }
-            System.out.println(); // Quebra de linha ao fim da contagem
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
     public void entrarEmEmergencia() {
-        if (!emManutencao) { // Verifica se não está em manutenção para entrar em emergência
-            System.out.println("ALERTA: O elevador entrou em estado de emergência, vai contatar a manutenção...");
-            aguardarSegundos(10); // Contagem regressiva de 10 segundos
-            entrarEmManutencao(); // Após a emergência, entra em manutenção
-        }
+        System.out.println("ALERTA: O elevador está em estado de emergência. Aguardando manutenção.");
+        this.estado = new EstadoEmergencia(this);
+        notificarObservadores();
+        aguardarSegundos(10); // Espera 10 segundos para simular o estado de emergência
+        entrarEmManutencao(); // Após emergência, entra em manutenção
     }
 
     public void entrarEmManutencao() {
-        if (!emManutencao) { // Evita múltiplas entradas em manutenção
-            emManutencao = true;
-            System.out.println("ALERTA: O elevador entrou em manutenção...");
-            aguardarSegundos(5); // Contagem regressiva de 5 segundos para simular o estado de manutenção
-            System.out.println("Manutenção concluída. Elevador voltando ao normal.");
-            this.estado = new EstadoParado(this); // Volta ao estado normal
-            emManutencao = false; // Reseta o estado de manutenção
-        }
+        System.out.println("ALERTA: O elevador está em manutenção.");
+        this.estado = new EstadoManutencao(this);
+        notificarObservadores();
+        aguardarSegundos(5); // Espera 5 segundos para simular o estado de manutenção
+        System.out.println("Manutenção concluída. Elevador voltando ao normal.");
+        this.estado = new EstadoParado(this); // Volta ao estado normal
     }
 
     public void abrirPorta() {
@@ -134,15 +132,5 @@ class Elevador {
 
     public void fecharPorta() {
         System.out.println("Porta fechada.");
-    }
-
-    // Método para verificar se pode subir para o andar desejado
-    public boolean podeSubir(int andarDesejado) {
-        return andarDesejado <= ANDAR_MAX && andarDesejado > andarAtual;
-    }
-
-    // Método para verificar se pode descer para o andar desejado
-    public boolean podeDescer(int andarDesejado) {
-        return andarDesejado >= ANDAR_MIN && andarDesejado < andarAtual;
     }
 }

@@ -19,13 +19,13 @@ public class SistemaElevador {
             while (true) {
                 if (emEmergencia) {
                     System.out.println("Elevador entrou em estado de emergência. Contatando manutenção...");
-                    iniciarManutencao();
+                    iniciarManutencao(elevador);
                     continue;
                 }
 
                 if (emManutencao) {
                     System.out.println("Elevador está em manutenção. Aguardando 10 segundos.");
-                    iniciarManutencao();
+                    iniciarManutencao(elevador);
                     continue;
                 }
 
@@ -33,18 +33,16 @@ public class SistemaElevador {
 
                 int andarDesejado = scanner.nextInt();
 
-                if (andarDesejado > elevador.getAndarAtual() && elevador.podeSubir(andarDesejado)) {
+                if (andarDesejado > elevador.getAndarAtual()) {
                     System.out.println("Subindo para o andar " + andarDesejado + "...");
-                    Comando subir = new ComandoSubir(elevador, andarDesejado);
-                    subir.executar();
+                    elevador.subir(andarDesejado);
                     usoExcessivo++;
-                } else if (andarDesejado < elevador.getAndarAtual() && elevador.podeDescer(andarDesejado)) {
+                } else if (andarDesejado < elevador.getAndarAtual()) {
                     System.out.println("Descendo para o andar " + andarDesejado + "...");
-                    Comando descer = new ComandoDescer(elevador, andarDesejado);
-                    descer.executar();
+                    elevador.descer(andarDesejado);
                     usoExcessivo++;
                 } else {
-                    System.out.println("Operação inválida! Andar fora do limite ou já está nesse andar.");
+                    System.out.println("Operação inválida! Você já está no andar " + andarDesejado + ".");
                 }
 
                 // Se o uso do elevador for excessivo, entra em estado de emergência
@@ -58,8 +56,7 @@ public class SistemaElevador {
     }
 
     private static void exibirMenu(Elevador elevador) {
-        System.out.println("Deseja (1) Subir ou (2) Descer?");
-        System.out.print("Pressione o número do andar desejado: ");
+        System.out.println("Escolha o andar desejado (0 a 10): ");
         for (int i = 0; i <= 10; i++) {
             System.out.print("(" + i + ") ");
         }
@@ -68,7 +65,7 @@ public class SistemaElevador {
     }
 
     // Temporizador para sair do estado de manutenção ou emergência após 10 segundos
-    private static void iniciarManutencao() {
+    private static void iniciarManutencao(Elevador elevador) {
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
@@ -76,6 +73,7 @@ public class SistemaElevador {
                 System.out.println("Manutenção concluída. Elevador voltando ao normal.");
                 emManutencao = false;
                 emEmergencia = false;
+                elevador.entrarEmManutencao();
             }
         }, 10000); // 10 segundos de espera
         emManutencao = true; // Durante a espera, estado de manutenção é verdadeiro

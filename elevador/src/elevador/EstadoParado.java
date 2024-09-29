@@ -9,6 +9,6 @@ class EstadoParado implements Estado {
 
     @Override
     public void executar() {
-        System.out.println("Elevador está parado.");
+        System.out.println("Elevador está parado no andar " + elevador.getAndarAtual());
     }
 }

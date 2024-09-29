@@ -9,6 +9,6 @@ class EstadoManutencao implements Estado {
 
     @Override
     public void executar() {
-        System.out.println("O elevador está em manutenção e não pode operar.");
+        System.out.println("Elevador está em manutenção.");
     }
 }
