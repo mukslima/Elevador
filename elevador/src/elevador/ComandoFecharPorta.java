@@ -1,6 +1,6 @@
 package elevador;
 
-class ComandoFecharPorta implements Comando {
+class ComandoFecharPorta implements ComandoElevador {
     private Elevador elevador;
 
     public ComandoFecharPorta(Elevador elevador) {

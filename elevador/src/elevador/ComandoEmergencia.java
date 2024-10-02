@@ -1,6 +1,6 @@
 package elevador;
 
-public class ComandoEmergencia implements Comando {
+public class ComandoEmergencia implements ComandoElevador {
     private Elevador elevador;
 
     public ComandoEmergencia(Elevador elevador) {
@@ -9,6 +9,6 @@ public class ComandoEmergencia implements Comando {
 
     @Override
     public void executar() {
-        elevador.entrarEmEmergencia(); // Agora acessível
+        elevador.entrarEmEmergencia();
     }
 }

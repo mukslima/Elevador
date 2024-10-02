@@ -1,6 +1,6 @@
 package elevador;
 
-class EstadoEmergencia implements Estado {
+public class EstadoEmergencia implements EstadoElevador {
     private Elevador elevador;
 
     public EstadoEmergencia(Elevador elevador) {
@@ -8,7 +8,12 @@ class EstadoEmergencia implements Estado {
     }
 
     @Override
-    public void executar() {
-        System.out.println("Elevador está em emergência.");
+    public void mover() {
+        System.out.println("O elevador está em emergência e não pode se mover!");
+    }
+
+    @Override
+    public void parar() {
+        System.out.println("Elevador já está em emergência.");
     }
 }

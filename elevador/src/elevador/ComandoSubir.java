@@ -1,6 +1,6 @@
 package elevador;
 
-class ComandoSubir implements Comando {
+public class ComandoSubir implements ComandoElevador {
     private Elevador elevador;
     private int andarDestino;
 
@@ -11,6 +11,7 @@ class ComandoSubir implements Comando {
 
     @Override
     public void executar() {
+        System.out.println("Elevador subindo...");
         elevador.subir(andarDestino);
     }
 }

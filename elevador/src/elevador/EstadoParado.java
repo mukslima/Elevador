@@ -1,6 +1,6 @@
 package elevador;
 
-class EstadoParado implements Estado {
+public class EstadoParado implements EstadoElevador {
     private Elevador elevador;
 
     public EstadoParado(Elevador elevador) {
@@ -8,7 +8,13 @@ class EstadoParado implements Estado {
     }
 
     @Override
-    public void executar() {
-        System.out.println("Elevador está parado no andar " + elevador.getAndarAtual());
+    public void mover() {
+        // O elevador pode começar a subir ou descer
+        System.out.println("Elevador está parado.");
+    }
+
+    @Override
+    public void parar() {
+        System.out.println("Elevador já está parado.");
     }
 }
