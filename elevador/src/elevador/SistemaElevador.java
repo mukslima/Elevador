@@ -25,16 +25,16 @@ public class SistemaElevador {
         sistema.adicionarComando(new ComandoSubir(elevador, 5));
         sistema.adicionarComando(new ComandoDescer(elevador, 2));
         sistema.adicionarComando(new ComandoDescer(elevador, 0));
-        sistema.adicionarComando(new ComandoDescer(elevador, 4));
-        sistema.adicionarComando(new ComandoDescer(elevador, 5));
-        sistema.adicionarComando(new ComandoDescer(elevador, 7));
+        sistema.adicionarComando(new ComandoSubir(elevador, 4));
+        sistema.adicionarComando(new ComandoSubir(elevador, 5));
+        sistema.adicionarComando(new ComandoSubir(elevador, 7));
         sistema.adicionarComando(new ComandoDescer(elevador, 3));
         sistema.adicionarComando(new ComandoDescer(elevador, 0));
         sistema.adicionarComando(new ComandoEmergencia(elevador));
         sistema.adicionarComando(new ComandoManutencao(elevador));
         sistema.adicionarComando(new ComandoDescer(elevador, 0));
-        sistema.adicionarComando(new ComandoDescer(elevador, 2));
-        sistema.adicionarComando(new ComandoDescer(elevador, 10));
+        sistema.adicionarComando(new ComandoSubir(elevador, 2));
+        sistema.adicionarComando(new ComandoSubir(elevador, 10));
         sistema.adicionarComando(new ComandoDescer(elevador, 4));
         // Executa os comandos
         sistema.executarComandos();
